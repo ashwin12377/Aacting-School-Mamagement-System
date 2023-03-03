@@ -1,0 +1,126 @@
+create table Login(
+name char(20),
+password int(10));
+
+create table student skills(
+skill_id int(10),
+sid int(10),
+dance varchar(30) not null,
+sing varchar(30) not null,
+classic_act varchar(30) not null,
+constraint con_mal_pk primary key(skill_id));
+
+
+create table teacher(
+tid int(10),
+skill_id int(10),
+phone int(15),	
+tname varchar(30) not null,constraint con_ten_pk primary key(tid),
+constraint con_ten_fk foreign key(skill_id) references skills(skill_id));
+
+
+
+create table actor(
+act_id int(10),
+address varchar(30) not null,fname varchar(30) not null,
+lname varchar(30) not null,
+skill_id int(10),
+tid int(10),
+constraint con_act_fk foreign key(tid) references teacher(tid),
+constraint con_act_fkk foreign key(skill_id) references skills(skill_id),
+constraint con_act_pk primary key(act_id));
+
+
+create table payment(
+rid int(10) not null,
+tid int(10) not null,
+amount int(15) not null,pay_date date,
+constraint con_ten_pk1 primary key(rid),
+constraint con_ten_fk1 foreign key(tid) references teacher(tid));
+
+
+
+
+
+
+
+create table assign(
+tid int(10),skill_id int(10),
+sid int(10),
+constraint con_act_fk122 foreign key(tid) references teacher(tid),
+constraint con_act_fk124 foreign key(skill_id) references skills(skill_id),
+constraint con_act_fk125 foreign key(sid) references student(sid));
+
+
+
+
+
+
+create table student(
+sid int(10),
+name varchar(30) not null,
+address varchar(30) not null,
+constraint con_act_pk primary key(sid));	
+constraint con_stu_fk23 foreign key(stu_id) references student(),
+-------------------------------------------------------------------------------------------------------------------------------------
+Login stored in backend:
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+            
+    String sql = "select * from login where username = ? and password = ?";
+    
+    try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/login","admin","password");
+        
+        PreparedStatement pstmt = conn.prepareStatement(sql);  /*pstmt-prepareStatement*/
+        pstmt.setString(1,jTextField1.getText());
+        pstmt.setString(2,new String(jPasswordField1.getPassword()));
+        
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next())
+        {
+          JOptionPane.showMessageDialog(null,"Welcome" + jTextField1.getText() ,"Successfull Login",JOptionPane.PLAIN_MESSAGE);   /*Display the message successfully login*/
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null,"Invalid user Name/Password","UnSuccessfull Login",JOptionPane.ERROR_MESSAGE);   /*For unsuccessful login display the message*/
+        }
+        conn.close();
+    }
+     
+    catch(Exception e)
+    {
+       JOptionPane.showMessageDialog(null,e); 
+    }
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Trigger:
+
+DELIMITER //
+create trigger lg_password
+before insert on login
+for each row
+begin
+if length (new.password)<4
+then
+signal sqlstate '45000'
+set message_text = 'Password field is too short';
+end if;
+end;
+//
+DELIMITER ;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Trigger:
+create trigger phone
+before insert on teacher
+for each row
+begin
+if length (new.phone)> 10 or length (new.phone )< 10
+then
+signal sqlstate '45000'
+set message_text = 'Invalid Phone Number';
+end if;
+end;

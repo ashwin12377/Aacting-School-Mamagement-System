@@ -1,0 +1,223 @@
+In front end: admin page:(Then removed and wrote in backend)
+
+String name = jTextField1.getText();
+        String pwd = new String(jPasswordField1.getPassword());
+        if(name.equals("admin") && pwd.equals("admin123"))
+        {
+            JOptionPane.showMessageDialog(null,"Welcome " + name,"Successfull Login",JOptionPane.PLAIN_MESSAGE);
+            new Homepage().setVisible(true); 
+            dispose();/*When admin login then admins message and area will be opend */
+        }   
+        else if(name.equals("user") && pwd.equals("user123"))     /* one more user */
+        {
+             
+        }  
+        else
+            JOptionPane.showMessageDialog(null,"Invalid User name/Password!! ","UnSuccessfull Login",JOptionPane.PLAIN_MESSAGE);
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Inserting Button:
+
+private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn;
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/acting_school?autoReconnect=true&useSSL=false","root","password");
+        
+        String sql;
+        sql = "insert into skills values(?, ?, ?, ?)";
+        PreparedStatement pstmt = conn.prepareStatement(sql);  /*pstmt-prepareStatement*/
+        pstmt.setInt(1,Integer.parseInt(jTextField1.getText()));
+        pstmt.setString(2,jTextField2.getText());
+        pstmt.setString(3,jTextField3.getText());
+        pstmt.setString(4,jTextField4.getText());
+        pstmt.executeUpdate();
+        JOptionPane.showMessageDialog(null,"Saved successfully");
+        conn.close();
+        }
+         catch(Exception e)
+    {
+       JOptionPane.showMessageDialog(null,e); 
+    }
+    }    
+                      
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+save button:
+
+private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn;
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/acting_school?autoReconnect=true&useSSL=false","root","password");
+        
+        String sql;
+        sql = "insert into skills values(?, ?, ?, ?)";
+        PreparedStatement pstmt = conn.prepareStatement(sql);  /*pstmt-prepareStatement*/
+        pstmt.setInt(1,Integer.parseInt(jTextField1.getText()));
+        pstmt.setString(2,jTextField2.getText());
+        pstmt.setString(3,jTextField3.getText());
+        pstmt.setString(4,jTextField4.getText());
+        pstmt.executeUpdate();
+        JOptionPane.showMessageDialog(null,"Saved successfully");
+        jTextField1.setText("");   
+        jTextField2.setText("");   /* If saved any then the text should be cleared*/
+        jTextField3.setText("");
+        jTextField4.setText("");
+        conn.close();
+        }
+         catch(Exception e)
+    {
+       JOptionPane.showMessageDialog(null,e); 
+    }
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Delete button:
+
+private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+         try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn;
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/acting_school","root","password");
+    
+        String sql = "delete from skills where skill_id = ?";	
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,Integer.parseInt(jTextField1.getText()));    /* int becoz skill is int*/ 
+        pstmt.executeUpdate();
+        JOptionPane.showMessageDialog(null,"Record Deleted Successfully");
+	jTextField1.setText("");
+        jTextField2.setText("");   /* If deleted any then the text should be cleared*/
+        jTextField3.setText("");
+        jTextField4.setText("");
+        
+       conn.close(); 
+       
+    }
+
+ catch(Exception e)
+    {
+       JOptionPane.showMessageDialog(null,e); 
+    }
+   
+    }                                     
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+updatee button:
+
+private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn;
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/acting_school","root","password");
+        
+        String sql = "update skills set dance=?,classic_act=?,sing=? where skill_id=?";
+        
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+ 	pstmt.setString(1,jTextField2.getText());
+	pstmt.setString(2,jTextField3.getText());
+	pstmt.setString(3,jTextField4.getText());
+	pstmt.setInt(4,Integer.parseInt(jTextField1.getText()));
+	
+	pstmt.executeUpdate();
+	JOptionPane.showMessageDialog(null,"Record Updated Successfully");
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+	
+      conn.close(); 
+       
+    }
+ catch(Exception e)
+    {
+       JOptionPane.showMessageDialog(null,e); 
+    }
+    
+    }               
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+search button:(skillDisp)
+
+ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn;
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/acting_school?autoReconnect=true&useSSL=false","root","password");
+	
+	String sql = "select * from skills where skill_id=?";
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setInt(1,Integer.parseInt(jTextField1.getText()));
+	
+	ResultSet rs = pstmt.executeQuery();
+	if(rs.next())
+	{
+	jTextField2.setText(rs.getString("Dance"));
+	jTextField3.setText(rs.getString("classic_act"));
+	jTextField4.setText(rs.getString("sing"));	
+	}
+	else
+	{
+	 JOptionPane.showMessageDialog(null,"Record not found");
+	}
+
+	conn.close();
+        }
+         catch(Exception e)
+    {
+       JOptionPane.showMessageDialog(null,e); 
+    }     
+    }
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------   
+Display dutton:
+
+(all this below code should writ in  Table  applet)
+
+public Tableact() {
+        initComponents(); 
+        DisplayTable();
+    }
+    public void DisplayTable()
+    {
+         try
+    {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn;
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/acting_school?autoReconnect=true&useSSL=false","root","password");
+      
+        String sql = "select  *  from  actor";
+        PreparedStatement pstmt = conn.prepareStatement(sql);  /*pstmt-prepareStatement*/
+        ResultSet  rs  = pstmt .executeQuery();
+        t2.setModel(DbUtils.resultSetToTableModel(rs));
+        conn.close();
+    }
+         catch(Exception e)
+    {
+       JOptionPane.showMessageDialog(null,e); 
+    }
+    }
+=======>>>>
+(after writing in Table then come to Display button  and write a code which go back to table)
+       new Tableact().setVisible(true); 
+       dispose();
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+create trigger phone
+before insert on teacher
+for each row
+begin
+if length (new.phone)> 10 or length (new.phone )< 10
+then
+signal sqlstate '45000'
+set message_text = 'Invalid Phone Number';
+end if;
+end;
+
+    
+    
+
+    
+
